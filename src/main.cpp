@@ -3,7 +3,6 @@
 // 3、编写C++代码，在C++中手动构建并销毁虚拟机，在中间增添要实现的内容，根据官方文档查找API实现所需的Java方法
 // 4、编译：g++ -g src/main.cpp -I $JAVA_HOME/include -I $JAVA_HOME/include/darwin -ljvm -L $JAVA_HOME/lib/server/ -o jnicpp
 // 5、运行测试：./jnicpp
-#include <stdio.h>
 #include <iostream>
 #include "main.h"
 #include "jni.h"
@@ -24,18 +23,20 @@ int main(int argc, char* argv[])
         // NewObject需要指明调用的构造方法，构建一个新的类对象，并初始化成员变量，调用指定的构造方法
         jobject jobj = env->AllocObject(java_class);
 
+        cout << "<<<<< From Java Main >>>>>" << endl;
         jmethodID methodId_main = env->GetStaticMethodID(java_class, "main", "([Ljava/lang/String;)V");
         env->CallStaticVoidMethod(java_class, methodId_main, "");
 
+        cout << "<<<<< Use Java Add >>>>>" << endl;
         jmethodID methodId_add = env->GetMethodID(java_class, "add", "(II)I");
         if (methodId_add != 0) {
             int i = 2;
-            printf("tag!\n");
             auto iresult = env->CallIntMethod(jobj, methodId_add, i, i);
             cout << "Add result is " << iresult << endl;
         }
         print_exception(env);
 
+        cout << "<<<<< Use Java toUpper >>>>>" << endl;
         jmethodID methodId_toUpper = env->GetMethodID(java_class, "toUpperCase", "(Ljava/lang/String;)Ljava/lang/String;");
         if (methodId_toUpper != 0) {
             const char* abc = "abc";
@@ -62,7 +63,7 @@ JNIEnv* create_vm(JavaVM ** jvm)
     vm_args.ignoreUnrecognized = 0;
 
     int ret = JNI_CreateJavaVM(jvm, (void**) &env, &vm_args);
-    if (ret < 0) printf("\n<<<<< Unable to Launch JVM >>>>>\n");
+    if (ret < 0) cout << "<<<<< Unable to Launch JVM >>>>>" << endl;
     return env;
 }
 
