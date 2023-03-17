@@ -7,8 +7,9 @@
 public class JNIDemo {
     static {
         try {
+            String path = JNIDemo.class.getClassLoader().getResource("//").getPath();
             // For MAC: DYLD_LIBRARY_PATH
-            System.load("/Users/jmy/Code/jnidemo/libdemo.so");
+            System.load(path + "../../../libdemo.so");
             System.out.println("Load library success");
         } catch (UnsatisfiedLinkError e) {
             System.out.println("Cannot load library!\n" + e);

@@ -5,7 +5,6 @@
 3. 编写C++文件，编译生成动态链接库 g++ src/JNIDemo.cpp -I $JAVA_HOME/include -I $JAVA_HOME/include/darwin -fPIC -shared -o libdemo.so
 4. 补充Java代码，调用所需的类，运行
 
-——————————
 ## C++调用Java ##
 1. 编写Java代码JNICpp，准备清单文件
 2. 打包：jar cvfm cpp.jar src/MANIFEST.MF -C out/production/jnidemo/ JNICpp.class
