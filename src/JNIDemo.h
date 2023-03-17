@@ -50,10 +50,10 @@ JNIEXPORT jstring JNICALL Java_JNIDemo_concat__Ljava_lang_String_2
 /*
  * Class:     JNIDemo
  * Method:    createUser
- * Signature: (ILjava/lang/String;)LUser;
+ * Signature: (ILjava/lang/String;ILjava/lang/String;)LUser;
  */
 JNIEXPORT jobject JNICALL Java_JNIDemo_createUser
-  (JNIEnv *, jobject, jint, jstring);
+  (JNIEnv *, jobject, jint, jstring, jint, jstring);
 
 /*
  * Class:     JNIDemo

@@ -4,3 +4,4 @@
 *.jar
 *.so
 *.iml
+/src/*.class

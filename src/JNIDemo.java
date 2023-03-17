@@ -26,7 +26,7 @@ public class JNIDemo {
 
     public native String concat(String a);
 
-    public native User createUser(int id, String name);
+    public native User createUser(int id, String name, int sid, String sname);
 
     public native String getUser(User user);
 
@@ -37,7 +37,7 @@ public class JNIDemo {
         System.out.println(demo.sayNo(true));
         System.out.println(demo.concat("abc", "def"));
         System.out.println(demo.concat("abc"));
-        User john = demo.createUser(1, "John");
+        User john = demo.createUser(1, "John", 0, "HUST");
         System.out.println(demo.getUser(john));
     }
 }
