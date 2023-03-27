@@ -2,6 +2,7 @@
 #include "JNIDemo.h"
 #include <iostream>
 #include <cstring>
+#include <unordered_map>
 
 using namespace std;
 
@@ -9,6 +10,7 @@ JNIEXPORT void JNICALL Java_JNIDemo_sayHello
   (JNIEnv *env, jobject obj, jstring str) {
     const char *text = env->GetStringUTFChars(str, 0);
     cout << "Hello from C++: " << text << endl;
+    env->ReleaseStringUTFChars(str, text);
 }
 
 
@@ -76,4 +78,29 @@ JNIEXPORT jstring JNICALL Java_JNIDemo_getUser
 
     jstring result = (jstring) env->CallObjectMethod(user, methodId);
     return result;
+}
+
+JNIEXPORT jobject JNICALL Java_JNIDemo_testMap
+  (JNIEnv *env, jobject obj, jobjectArray args) {
+    std::unordered_map<long, std::string> um;
+    for (int i = 0; i < env->GetArrayLength(args) - 1; i += 2) {
+      jlong jKey = (jlong) env->GetObjectArrayElement(args, i);
+      jstring jValue = (jstring) env->GetObjectArrayElement(args, i + 1);
+      const char *value = env->GetStringUTFChars(jValue, nullptr);
+      um[jKey] = value;
+      env->ReleaseStringUTFChars(jValue, value);
+    }
+    jclass hashMapClass = env->FindClass("java/util/HashMap");
+    // jmethodID hashMapCtor = env->GetMethodID(hashMapClass, "<init>", "()V");
+    // jobject hashMap = env->NewObject(hashMapClass, hashMapCtor);
+    jobject hashMap = env->AllocObject(hashMapClass);
+    jmethodID hashMapPut = env->GetMethodID(hashMapClass, "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+    for (auto& [key, value] : um) {
+      // 也可用类似pair.first()的方法
+      jlong jKey = (jlong) key;
+      jstring jValue = env->NewStringUTF(value.c_str());
+      env->CallObjectMethod(hashMap, hashMapPut, jKey, jValue);
+      env->DeleteLocalRef(jValue);
+    }
+    return hashMap;
 }

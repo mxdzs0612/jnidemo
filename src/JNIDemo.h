@@ -63,6 +63,14 @@ JNIEXPORT jobject JNICALL Java_JNIDemo_createUser
 JNIEXPORT jstring JNICALL Java_JNIDemo_getUser
   (JNIEnv *, jobject, jobject);
 
+/*
+ * Class:     JNIDemo
+ * Method:    testMap
+ * Signature: ([Ljava/lang/Object;)Ljava/util/Map;
+ */
+JNIEXPORT jobject JNICALL Java_JNIDemo_testMap
+  (JNIEnv *, jobject, jobjectArray);
+
 #ifdef __cplusplus
 }
 #endif

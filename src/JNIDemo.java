@@ -4,6 +4,8 @@
 // 3、编写C++文件，编译生成动态链接库 g++ src/JNIDemo.cpp -I $JAVA_HOME/include -I $JAVA_HOME/include/darwin -fPIC -shared -o libdemo.so
 // 4、补充Java代码，运行
 
+import java.util.Map;
+
 public class JNIDemo {
     static {
         try {
@@ -31,6 +33,8 @@ public class JNIDemo {
 
     public native String getUser(User user);
 
+    public native Map<Long, String> testMap(Object... objects);
+
     public static void main(String[] args) {
         JNIDemo demo = new JNIDemo();
         demo.sayHello("my");
@@ -40,5 +44,7 @@ public class JNIDemo {
         System.out.println(demo.concat("abc"));
         User john = demo.createUser(1, "John", 0, "HUST");
         System.out.println(demo.getUser(john));
+        Map<Long, String> map = demo.testMap(1, "a", 2, "b", "333333333333333333", "asasfsdfsadasdfasdfasdfasdfasd");
+        System.out.println(map);
     }
 }
