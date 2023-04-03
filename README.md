@@ -1,7 +1,7 @@
 ## Java调用C++ ##
 1. 编辑Java文件JNIDemo、User
 2. 生成头文件 javac -h -jni -classpath out/production/jnidemo -d src JNIDemo  
-   JDK11+: javac -encoding utf8 -h src src/JNIDemo.java src/User.java
+   JDK11+: javac -encoding utf8 -h src -d out/production/jnidemo src/JNIDemo.java src/User.java
 3. 编写C++文件，编译生成动态链接库 g++ src/JNIDemo.cpp -I $JAVA_HOME/include -I $JAVA_HOME/include/darwin -fPIC -shared -o libdemo.so
 4. 补充Java代码，调用所需的类，运行
 

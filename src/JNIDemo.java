@@ -1,6 +1,5 @@
 // 1、编辑Java文件
-// 2、生成头文件 javac -h -jni -classpath out/production/jnidemo -d src JNIDemo
-//    JDK11+: javac -encoding utf8 -h src src/JNIDemo.java src/User.java
+// 2、生成头文件 JDK11+不需要写-jni: javac -encoding utf8 -h src -d out/production/jnidemo src/JNIDemo.java src/User.java
 // 3、编写C++文件，编译生成动态链接库 g++ src/JNIDemo.cpp -I $JAVA_HOME/include -I $JAVA_HOME/include/darwin -fPIC -shared -o libdemo.so
 // 4、补充Java代码，运行
 
@@ -44,7 +43,6 @@ public class JNIDemo {
         System.out.println(demo.concat("abc"));
         User john = demo.createUser(1, "John", 0, "HUST");
         System.out.println(demo.getUser(john));
-        Map<Long, String> map = demo.testMap(1, "a", 2, "b", "333333333333333333", "asasfsdfsadasdfasdfasdfasdfasd");
-        System.out.println(map);
+        System.out.println(demo.testMap(1, "a", 2, "b", "9333333333333333333333339", "pscrpscrpscr"));
     }
 }
