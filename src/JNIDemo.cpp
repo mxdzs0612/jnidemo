@@ -46,7 +46,7 @@ JNIEXPORT jstring JNICALL Java_JNIDemo_concat__Ljava_lang_String_2
 }
 
 JNIEXPORT jobject JNICALL Java_JNIDemo_createUser
-  (JNIEnv *env, jobject obj, jint id, jstring name, jint sid, jstring sname) {
+  (JNIEnv *env, jobject obj, jint id, jstring name, jint sid, jstring sname, jobject map) {
     // Create the object of the class UserData
     jclass userDataClass = env->FindClass("User");
     jobject newUserData = env->AllocObject(userDataClass);
@@ -60,12 +60,14 @@ JNIEXPORT jobject JNICALL Java_JNIDemo_createUser
     jfieldID schoolField = env->GetFieldID(userDataClass , "userSchool", "LUser$UserSchool;");
     jfieldID schoolIdField = env->GetFieldID(userSchoolClass , "sId", "I");
     jfieldID schoolNameField = env->GetFieldID(userSchoolClass , "sName", "Ljava/lang/String;");
+    jfieldID scoreField = env->GetFieldID(userDataClass , "score", "Ljava/util/Map;");
 
     env->SetIntField(newUserData, idField, id);
     env->SetObjectField(newUserData, nameField, name);
     env->SetIntField(newSchoolData, schoolIdField, sid);
     env->SetObjectField(newSchoolData, schoolNameField, sname);
     env->SetObjectField(newUserData, schoolField, newSchoolData);
+    env->SetObjectField(newUserData, scoreField, map);
 
     return newUserData;
 }

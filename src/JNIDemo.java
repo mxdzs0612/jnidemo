@@ -3,6 +3,7 @@
 // 3、编写C++文件，编译生成动态链接库 g++ src/JNIDemo.cpp -I $JAVA_HOME/include -I $JAVA_HOME/include/darwin -fPIC -shared -o libdemo.so
 // 4、补充Java代码，运行
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class JNIDemo {
@@ -28,7 +29,7 @@ public class JNIDemo {
 
     public native String concat(String a);
 
-    public native User createUser(int id, String name, int sid, String sname);
+    public native User createUser(int id, String name, int sid, String sname, Map<String, Integer> score);
 
     public native String getUser(User user);
 
@@ -41,7 +42,9 @@ public class JNIDemo {
         System.out.println(demo.sayNo(true));
         System.out.println(demo.concat("abc", "def"));
         System.out.println(demo.concat("abc"));
-        User john = demo.createUser(1, "John", 0, "HUST");
+        HashMap<String,Integer> map = new HashMap<>();
+        map.put("Math", 100);
+        User john = demo.createUser(1, "John", 0, "HUST", map);
         System.out.println(demo.getUser(john));
         System.out.println(demo.testMap(1, "a", 2, "b", "9333333333333333333333339", "pscrpscrpscr"));
     }
