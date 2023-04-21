@@ -15,7 +15,5 @@
 5. 运行测试：./jnicpp
 
 也可使用CMake：
-1. mkdir build && cd build
-2. cmake ..
-3. cmake --build .
-4. ./JniDemoCpp
+1. ./cmake.sh 
+2. ./build/JniDemoCpp
