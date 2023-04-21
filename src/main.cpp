@@ -4,6 +4,8 @@
 // 4、编译：g++ -g src/main.cpp -I $JAVA_HOME/include -I $JAVA_HOME/include/darwin -ljvm -L $JAVA_HOME/lib/server/ -o jnicpp
 // 5、运行测试：./jnicpp
 #include <iostream>
+#include <unordered_map>
+
 #include "main.h"
 #include "jni.h"
 
@@ -45,6 +47,37 @@ int main(int argc, char* argv[])
             cout << "The upper case is: " << newStr << endl;
         }
         print_exception(env);
+
+        cout << "<<<<< Use Java getMap >>>>>" << endl;
+        jmethodID methodId_getMap = env->GetMethodID(java_class, "getMap", "()Ljava/util/HashMap;");
+        if (methodId_getMap != 0) {
+            std::unordered_map<int, std::string> um;
+            auto m = env->CallObjectMethod(jobj, methodId_getMap);
+            jclass mapClass = env->GetObjectClass(m);
+            jmethodID entrySetMethod = env->GetMethodID(mapClass, "entrySet", "()Ljava/util/Set;");
+            jobject entrySetObj = env->CallObjectMethod(m, entrySetMethod);
+            jclass setClass = env->GetObjectClass(entrySetObj);
+            jmethodID iteratorMethod = env->GetMethodID(setClass, "iterator", "()Ljava/util/Iterator;");
+            jobject iteratorObj = env->CallObjectMethod(entrySetObj, iteratorMethod);
+            jclass mapEntryClass = env->FindClass("java/util/Map$Entry");
+            jclass integerClass = env->FindClass("java/lang/Integer");
+            jmethodID getKeyMethod = env->GetMethodID(mapEntryClass, "getKey", "()Ljava/lang/Object;");
+            jmethodID getValueMethod = env->GetMethodID(mapEntryClass, "getValue", "()Ljava/lang/Object;");
+
+            jmethodID intValueMethod = env->GetMethodID(integerClass, "intValue", "()I");
+            while (env->CallBooleanMethod(iteratorObj, env->GetMethodID(env->GetObjectClass(iteratorObj), "hasNext", "()Z"))) {
+                jobject entryObj = env->CallObjectMethod(iteratorObj, env->GetMethodID(env->GetObjectClass(iteratorObj), "next", "()Ljava/lang/Object;"));
+                auto integerObj = env->CallObjectMethod(entryObj, getKeyMethod);
+                jint keyObj = env->CallIntMethod(integerObj, intValueMethod);
+                jstring valueObj = (jstring)env->CallObjectMethod(entryObj, getValueMethod);
+                int k = (int) keyObj;
+                std::string v = jstringToString(env, valueObj);
+                um[k] = v;
+            }
+            for (const auto& pair : um) {
+                std::cout << "Key: " << pair.first << ", Value: " << pair.second << std::endl;
+            }
+        }
     }
 
     jvm->DestroyJavaVM();
@@ -57,7 +90,7 @@ JNIEnv* create_vm(JavaVM ** jvm)
     vm_args.version = JNI_VERSION_10;
     // JVM参数，如有更多需增大数组容量
     JavaVMOption* options = new JavaVMOption[1];
-    options[0].optionString = (char *) "-Djava.class.path=/Users/jmy/Code/jnidemo/cpp.jar";
+    options[0].optionString = (char *) "-Djava.class.path=cpp.jar";
     vm_args.nOptions = 1;
     vm_args.options = options;
     vm_args.ignoreUnrecognized = 0;
@@ -72,4 +105,11 @@ void print_exception(JNIEnv* env) {
         env->ExceptionDescribe();
         env->ExceptionClear();
     }
+}
+
+std::string jstringToString(JNIEnv* env, jstring jstr) {
+    const char* cstr = env->GetStringUTFChars(jstr, nullptr);
+    std::string str(cstr);
+    env->ReleaseStringUTFChars(jstr, cstr);
+    return str;
 }

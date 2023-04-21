@@ -1,3 +1,5 @@
+一个JNI的Demo，双向调用。目前仅在mac上测试，其他系统需修改代码及脚本。
+
 ## Java调用C++ ##
 1. 编辑Java文件JNIDemo、User
 2. 生成头文件 javac -h -jni -classpath out/production/jnidemo -d src JNIDemo  

@@ -1,4 +1,5 @@
-# mkdir build && cd build
+# jar cvfm cpp.jar src/MANIFEST.MF -C out/production/jnidemo/ JNICpp.class
+# mkdir build && cd build && mv ../cpp.jar .
 # cmake ..
 # cmake --build .
 # ./JniDemoCpp
