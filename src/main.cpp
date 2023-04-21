@@ -53,18 +53,23 @@ int main(int argc, char* argv[])
         if (methodId_getMap != 0) {
             std::unordered_map<int, std::string> um;
             auto m = env->CallObjectMethod(jobj, methodId_getMap);
+            // 获取HashMap类和entrySet方法的ID
             jclass mapClass = env->GetObjectClass(m);
             jmethodID entrySetMethod = env->GetMethodID(mapClass, "entrySet", "()Ljava/util/Set;");
             jobject entrySetObj = env->CallObjectMethod(m, entrySetMethod);
+            // 获取Set类和iterator方法的ID
             jclass setClass = env->GetObjectClass(entrySetObj);
             jmethodID iteratorMethod = env->GetMethodID(setClass, "iterator", "()Ljava/util/Iterator;");
+            // 获取Iterator类和hasNext、next方法的ID
             jobject iteratorObj = env->CallObjectMethod(entrySetObj, iteratorMethod);
             jclass mapEntryClass = env->FindClass("java/util/Map$Entry");
             jclass integerClass = env->FindClass("java/lang/Integer");
+            // 获取Map.Entry类和getKey、getValue方法的ID
             jmethodID getKeyMethod = env->GetMethodID(mapEntryClass, "getKey", "()Ljava/lang/Object;");
             jmethodID getValueMethod = env->GetMethodID(mapEntryClass, "getValue", "()Ljava/lang/Object;");
 
             jmethodID intValueMethod = env->GetMethodID(integerClass, "intValue", "()I");
+            // 遍历HashMap，将键和值存储到unordered_map中
             while (env->CallBooleanMethod(iteratorObj, env->GetMethodID(env->GetObjectClass(iteratorObj), "hasNext", "()Z"))) {
                 jobject entryObj = env->CallObjectMethod(iteratorObj, env->GetMethodID(env->GetObjectClass(iteratorObj), "next", "()Ljava/lang/Object;"));
                 auto integerObj = env->CallObjectMethod(entryObj, getKeyMethod);
@@ -79,8 +84,8 @@ int main(int argc, char* argv[])
             }
         }
     }
-
     jvm->DestroyJavaVM();
+    return 0;
 }
 
 JNIEnv* create_vm(JavaVM ** jvm)
