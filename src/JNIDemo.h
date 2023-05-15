@@ -71,6 +71,14 @@ JNIEXPORT jstring JNICALL Java_JNIDemo_getUser
 JNIEXPORT jobject JNICALL Java_JNIDemo_testMap
   (JNIEnv *, jobject, jobjectArray);
 
+/*
+ * Class:     JNIDemo
+ * Method:    testStatic
+ * Signature: (Ljava/util/List;)V
+ */
+JNIEXPORT void JNICALL Java_JNIDemo_testStatic
+  (JNIEnv *, jclass, jobject);
+
 #ifdef __cplusplus
 }
 #endif

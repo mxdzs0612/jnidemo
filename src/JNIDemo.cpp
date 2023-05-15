@@ -106,3 +106,27 @@ JNIEXPORT jobject JNICALL Java_JNIDemo_testMap
     }
     return hashMap;
 }
+
+JNIEXPORT void JNICALL Java_JNIDemo_testStatic
+  (JNIEnv *env, jclass cls, jobject javaList) {
+  // 获取List对象的长度
+  jclass listClass = env->GetObjectClass(javaList);
+  jmethodID sizeMethod = env->GetMethodID(listClass, "size", "()I");
+  jint size = env->CallIntMethod(javaList, sizeMethod);
+
+  // 将List中的元素存储在jobject数组中
+  jobjectArray javaArray = env->NewObjectArray(size, env->FindClass("java/lang/Object"), NULL);
+  for (int i = 0; i < size; i++) {
+      jmethodID getMethod = env->GetMethodID(listClass, "get", "(I)Ljava/lang/Object;");
+      jobject item = env->CallObjectMethod(javaList, getMethod, i);
+      env->SetObjectArrayElement(javaArray, i, item);
+  }
+
+  // 输出jobject数组中的元素
+  for (int i = 0; i < size; i++) {
+      jstring item = (jstring) env->GetObjectArrayElement(javaArray, i);
+      const char* itemChars = env->GetStringUTFChars(item, NULL);
+      cout << "List element: " << i << ":" << itemChars << endl;
+      env->ReleaseStringUTFChars(item, itemChars);
+  }
+}
